@@ -387,13 +387,6 @@ public class Funcionario extends Pessoa {
 
 
 
-
-
-
-
-
-
-
 package model;
 
 public class Data {
@@ -474,14 +467,233 @@ public class Data {
 
 
 
+package vision;
 
+public class TesteCadastro {
+    public static void main(String[] args) {
+        control.CadastroPessoas cp = new control.CadastroPessoas();
+        model.Cliente c = new model.Cliente("Arnaldo Botelho", new model.Data(1, 4, 1997), 1002);
+        model.Funcionario f = new model.Funcionario("Eliomar Santana", new model.Data(7, 10, 1969), 2000f);
+        model.Gerente g = new model.Gerente("Amanda Valença", new model.Data(29, 3, 2000), 5000, "Financeiro");
 
+        cp.cadastraPessoa(c);
+        cp.cadastraPessoa(f);
+        cp.cadastraPessoa(g);
 
+        cp.imprimeCadastro();
+    }
+}
 
+package control;
 
+public class CadastroPessoas {
+    private int qtdAtual;
+    private model.Pessoa[] pessoas;
 
+    public CadastroPessoas() {
+        this.qtdAtual = 0;
+        this.pessoas = new model.Pessoa[1024];
+    }
 
+    public void cadastraPessoa(model.Pessoa pess) {
+        this.pessoas[qtdAtual++] = pess;
+    }
 
+    public void imprimeCadastro() {
+        System.out.println("Cadastro:");
+        for (int i = 0; i < qtdAtual; i++) {
+            pessoas[i].imprimeDados();
+        }
+    }
+}
 
+package model;
 
+public abstract class Pessoa {
+    private String nome;
+    private Data nascimento;
 
+    public Pessoa(String nome, Data nascimento) {
+        this.nome = nome;
+        this.nascimento = nascimento;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Data getNascimento() {
+        return nascimento;
+    }
+
+    public void setNascimento(Data nascimento) {
+        this.nascimento = nascimento;
+    }
+
+    public abstract void imprimeDados();
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+        result = prime * result + ((nascimento == null) ? 0 : nascimento.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Pessoa other = (Pessoa) obj;
+        if (nome == null) {
+            if (other.nome != null)
+                return false;
+        } else if (!nome.equals(other.nome))
+            return false;
+        if (nascimento == null) {
+            if (other.nascimento != null)
+                return false;
+        } else if (!nascimento.equals(other.nascimento))
+            return false;
+        return true;
+    }
+}
+
+package model;
+
+public class Gerente extends Funcionario {
+    private String area;
+
+    public Gerente(String nome, Data nascimento, float salario, String area) {
+        super(nome, nascimento, salario);
+        this.area = area;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    @Override
+    public float calcularImposto() {
+        return super.getSalario() * 0.05f;
+    }
+
+    @Override
+    public void imprimeDados() {
+        System.out.format("Gerente:" + 
+                           "\nNome: %s" +
+                           "\nData de nascimento: %s" +
+                           "\nSalário: %.02f" + 
+                           "\nImposto sobre salário: %.02f" +
+                           "\nÁrea: %s" +
+                           "\n---------------------------------------------\n",
+                           super.getNome(), super.getNascimento(), super.getSalario(), this.calcularImposto(), this.area);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((area == null) ? 0 : area.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Gerente other = (Gerente) obj;
+        if (area == null) {
+            if (other.area != null)
+                return false;
+        } else if (!area.equals(other.area))
+            return false;
+        return true;
+    }
+}
+
+package model;
+
+public class Cliente extends Pessoa {
+    private int codigo;
+
+    public Cliente(String nome, Data nascimento, int codigo) {
+        super(nome, nascimento);
+        this.codigo = codigo;
+    }
+
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
+    }
+
+    @Override
+    public void imprimeDados() {
+        System.out.format("Cliente:" + 
+                           "\nNome: %s" +
+                           "\nData de nascimento: %s" +
+                           "\nCódigo: %d" + 
+                           "\n---------------------------------------------\n",
+                           super.getNome(), super.getNascimento(), this.codigo);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + codigo;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Cliente other = (Cliente) obj;
+        if (codigo != other.codigo)
+            return false;
+        return true;
+    }
+}
+
+package model;
+
+public class Funcionario extends Pessoa {
+    private float salario;
+
+    public Funcionario(String nome, Data nascimento, float salario) {
+        super(nome, nascimento);
+        this.salario = salario;
+    }
+
+    public float getSalario() {
+        return salario;
+    }
+
+    public void setSalario(float salario) {
+        this.salario = salario;
+    }
