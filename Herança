@@ -1,0 +1,189 @@
+//pacote visão
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+    public static String menu() {
+        return "Digite:\n" +
+                "1 - Cadastrar produto \n" +
+                "2 - Imprimir produto \n" +
+                "3 - Eh caro? \n" +
+                "0 - para sair";
+    }
+
+    public static void main(String[] args) {
+        ControleProduto cp = new ControleProduto();
+        int op;
+
+        Scanner scanner = new Scanner(System.in);
+
+        do {
+            System.out.println(menu());
+            op = scanner.nextInt();
+
+            switch (op) {
+                case 1: // Cadastrar produto
+                    System.out.print("Digite o nome do produto: ");
+                    String nome = scanner.next();
+
+                    System.out.print("Digite o preco do produto: ");
+                    double preco = scanner.nextDouble();
+
+                    System.out.print("Este produto é um livro? (1 - Sim, 2 - Não): ");
+                    int op2 = scanner.nextInt();
+
+                    if (op2 == 1) {
+                        System.out.print("Digite o autor do livro: ");
+                        String autor = scanner.next();
+
+                        System.out.print("Digite o número de paginas do livro: ");
+                        int pag = scanner.nextInt();
+
+                        System.out.print("Este livro é didático? (1 - Sim, 2 - Não): ");
+                        int op3 = scanner.nextInt();
+
+                        if (op3 == 1) {
+                            System.out.print("Digite a disciplina do livro didático: ");
+                            String disciplina = scanner.next();
+                            cp.cadastrarProduto(nome, preco, autor, pag, disciplina);
+                        } else {
+                            cp.cadastrarProduto(nome, preco, autor, pag);
+                        }
+                    } else {
+                        cp.cadastrarProduto(nome, preco);
+                    }
+                    break;
+
+                case 2: // Imprimir produto
+                    System.out.print("Digite o código do produto: ");
+                    int codigoImprimir = scanner.nextInt();
+                    System.out.println(cp.imprimirProduto(codigoImprimir));
+                    break;
+
+                case 3: // eh caro
+                    System.out.print("Digite o código do produto: ");
+                    int codigoEhCaro = scanner.nextInt();
+                    boolean caro = cp.produtoEhCaro(codigoEhCaro);
+                    if (caro) {
+                        System.out.println("O produto é caro.");
+                    } else {
+                        System.out.println("O produto não é caro.");
+                    }
+                    break;
+            }
+        } while (op != 0);
+
+        scanner.close();
+    }
+}
+
+
+
+
+
+//pacote  controle 
+
+
+
+import java.util.ArrayList;
+
+public class ControleProduto {
+    private ArrayList<Produto> produtos = new ArrayList<>();
+
+    public void cadastrarProduto(String nome, double preco) {
+        produtos.add(new Produto(nome, preco));
+    }
+
+    public void cadastrarProduto(String nome, double preco, String autor, int paginas) {
+        produtos.add(new Livro(nome, autor, preco, paginas));
+    }
+
+    public void cadastrarProduto(String nome, double preco, String autor, int paginas, String disciplina) {
+        produtos.add(new LivroDidatico(nome, autor, preco, paginas, disciplina));
+    }
+
+    public Produto pesquisarProduto(int codigo) {
+        Produto p = null;
+        for (Produto produto : produtos) {
+            if (codigo == produto.getCodigo()) {
+                p = produto;
+                break;
+            }
+        }
+        return p;
+    }
+
+    public String imprimirProduto(int codigo) {
+        Produto p = pesquisarProduto(codigo);
+        if (p != null) {
+            return p.toString();
+        } else {
+            return "Código inválido";
+        }
+    }
+
+    public boolean produtoEhCaro(int codigo) {
+        Produto p = pesquisarProduto(codigo);
+        return p != null && p.ehCaro();
+    }
+}
+
+
+
+
+
+
+
+//Pacote modelo
+
+
+public class Livro extends Produto {
+    private int paginas;
+
+    public Livro(String nome, String autor, double preco, int paginas) {
+        super(nome, autor, preco);
+        this.paginas = paginas;
+    }
+
+    public int getPaginas() {
+        return paginas;
+    }
+
+    public void setPaginas(int paginas) {
+        this.paginas = paginas;
+    }
+
+    public boolean ehGrande() {
+        return paginas > 200;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "\nPaginas: " + paginas;
+    }
+}
+
+
+
+
+public class LivroDidatico extends Livro {
+    private String disciplina;
+
+    public LivroDidatico(String nome, String autor, double preco, int paginas, String disciplina) {
+        super(nome, autor, preco, paginas);
+        this.disciplina = disciplina;
+    }
+
+    @Override
+    public boolean ehCaro() {
+        return getPreco() > 200.00;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "\nDisciplina: " + disciplina;
+    }
+}
