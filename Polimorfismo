@@ -223,3 +223,158 @@ cConta.mostrarHistorico(numConta));
  op = Integer.parseInt(JOptionPane.showInputDialog(menu()));  } 
  } 
  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class BancoApp {
+    private static Scanner scanner = new Scanner(System.in);
+    private static ControleConta cConta = new ControleConta();
+    private static ControleCliente cCliente = new ControleCliente();
+
+    public static String menu() {
+        return "Banco AP2\n\n" +
+                "1-Criar Conta\n" +
+                "2-Depositar Valor\n" +
+                "3-Sacar Valor\n" +
+                "4-Consultar Saldo\n" +
+                "5-Mostrar Histórico\n" +
+                "6-Imprimir Contas\n" +
+                "7-Cadastrar Cliente\n" +
+                "0-Finalizar\n\n" +
+                "Digite a opção desejada:";
+    }
+
+    public static void main(String[] args) {
+        int op;
+
+        do {
+            System.out.println(menu());
+            op = scanner.nextInt();
+
+            switch (op) {
+                case 1:
+                    criarConta();
+                    break;
+                case 2:
+                    depositar();
+                    break;
+                case 3:
+                    sacar();
+                    break;
+                case 4:
+                    consultarSaldo();
+                    break;
+                case 5:
+                    mostrarHistorico();
+                    break;
+                case 6:
+                    imprimirContas();
+                    break;
+                case 7:
+                    cadastrarCliente();
+                    break;
+            }
+        } while (op != 0);
+
+        scanner.close();
+    }
+
+    private static void criarConta() {
+        System.out.print("Digite o CPF do cliente: ");
+        long cpf = scanner.nextLong();
+        Cliente cliente = cCliente.pesquisarCliente(cpf);
+
+        if (cliente != null) {
+            cConta.cadastrarConta(cliente);
+            System.out.println("Conta cadastrada com sucesso!");
+        } else {
+            System.out.println("CPF inválido");
+        }
+    }
+
+    private static void depositar() {
+        System.out.print("Digite o número da conta: ");
+        int numConta = scanner.nextInt();
+        System.out.print("Digite o valor do depósito: ");
+        double valor = scanner.nextDouble();
+        cConta.depositar(numConta, valor);
+        System.out.println("Depósito realizado com sucesso");
+    }
+
+    private static void sacar() {
+        System.out.print("Digite o número da conta: ");
+        int numConta = scanner.nextInt();
+        System.out.print("Digite o valor do saque: ");
+        double valor = scanner.nextDouble();
+
+        if (cConta.sacar(numConta, valor)) {
+            System.out.println("Saque realizado com sucesso");
+        } else {
+            System.out.println("Valor inválido");
+        }
+    }
+
+    private static void consultarSaldo() {
+        System.out.print("Digite o número da conta: ");
+        int numConta = scanner.nextInt();
+        System.out.println("Conta: " + numConta + "\nSaldo: " + cConta.consultarSaldo(numConta));
+    }
+
+    private static void mostrarHistorico() {
+        System.out.print("Digite o número da conta: ");
+        int numConta = scanner.nextInt();
+        System.out.println(cConta.mostrarHistorico(numConta));
+    }
+
+    private static void imprimirContas() {
+        System.out.println(cConta.imprimirContas());
+    }
+
+    private static void cadastrarCliente() {
+        System.out.print("Digite o nome do cliente: ");
+        String nome = scanner.next();
+        System.out.print("Digite o CPF: ");
+        long cpf = scanner.nextLong();
+        cCliente.cadastrarCliente(nome, cpf);
+        System.out.println("Cliente cadastrado com sucesso!");
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
