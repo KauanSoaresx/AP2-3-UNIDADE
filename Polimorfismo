@@ -1,0 +1,225 @@
+1. Crie o projeto Banco e os pacotes modelo, controle e visao.  
+2. Crie as classes Conta e Cliente (código no fim do arquivo), coloque no pacote modelo, leia e entenda o  código. 
+3. Crie o método toString na classe Conta para devolver os seguintes dados da conta: número e saldo. 4. Crie as classes ControleConta e ControleCliente (código no fim do arquivo), coloque no  pacote controle, leia e entenda o código.  
+5. Crie a classe BancoApp (código no fim do arquivo), coloque no pacote visao, leia e entenda o código. 6. Teste todas as funções do programa. 
+7. Vamos então criar as classes da hierarquia de Conta conforme diagrama acima: a) Crie a classe ContaCorrente e faça com que ela seja filha da classe Conta. Encapsule os  atributos. 
+b) Crie a classe ContaPoupanca e faça com que ela seja filha da classe Conta. Encapsule os  atributos. 
+8. Altere a classe BancoApp para que o usuário possa escolher o tipo da conta que deseja cadastrar  (corrente ou poupança), crie a conta do tipo escolhido. Teste o programa. 
+9. O método imprimirContas não consegue exibir o tipo de cada conta. Para resolver isso, podemos  criar um método getTipo em cada uma das classes (Conta, ContaCorrente e ContaPoupanca) fazendo  com que a classe Conta retorne a string “Conta”, ContaCorrente devolva a string "Conta Corrente"  e a ContaPoupança devolva a string "Conta Poupança":
+
+10. Vamos mudar o comportamento da operação de saque de acordo com o tipo de conta que estiver  sendo utilizada. Vamos alterar o método sacar para tirar 10 centavos de cada saque em uma conta  corrente. 
+11. A classe Conta é uma excelente candidata para uma classe abstrata. Por quê? Quais métodos seriam  interessantes candidatos a serem abstratos? 
+12. Transforme a classe Conta em uma classe abstrata, agora não é possível dar new nela mais. Se não  podemos dar new em Conta , qual é a utilidade de ter um método que recebe uma referência a Conta como argumento? Aliás, posso ter isso? 
+13. Comente o método getTipo() da ContaPoupanca , dessa forma ele herdará o método  diretamente de Conta . Transforme o método getTipo() da classe Conta em abstrato. O que  aconteceu? Qual é o problema com a classe ContaPoupanca?  
+14. Retire o comentário do método getTipo na classe ContaPoupanca , e se necessário altere-o  para que a classe possa compilar normalmente.  
+15. Existe outra maneira de a classe ContaPoupanca compilar se você não reescrever o método  abstrato? 
+16. Para que ter o método getTipo na classe Conta se ele não faz nada? O que acontece se  simplesmente apagarmos esse método da classe Conta e deixarmos o método getTipo nas filhas? 17. Posso chamar um método abstrato de dentro de um outro método da própria classe abstrata? Por  exemplo, imagine que exista o seguinte método na classe Conta 
+
+18. Podemos invocar o getTipo dentro deste método? 
+return "Numero: " + getNumeroConta() +  
+ "\nSaldo: " + getSaldo()+  
+ "\nTipo: " + this.getTipo(); 
+//Classe Conta 
+import java.util.ArrayList; 
+public class Conta { 
+ // atributos 
+ private int numeroConta; 
+ private Cliente cliente; 
+ private double saldo; 
+ private ArrayList <String> historico; 
+ private static int identificador=0; 
+  //Construtores 
+ public Conta (){ 
+ numeroConta = ++identificador; 
+ historico = new ArrayList<String>(); 
+ } 
+ public Conta(Cliente cliente){ 
+ numeroConta = ++identificador; 
+ this.cliente=cliente; 
+ this.saldo=0.0; 
+ historico = new ArrayList<String>(); 
+ } 
+ public Conta (Cliente c, double saldo){ 
+ numeroConta=++identificador;  
+ this.cliente = c; 
+ this.saldo = saldo;  
+ historico = new ArrayList<String>(); 
+ } 
+ 
+ // métodos 
+  public int getNumeroConta() { 
+ return numeroConta; 
+ } 
+ public Cliente getCliente() { 
+ return cliente; 
+ } 
+ public double getSaldo() { 
+ return saldo; 
+ } 
+ public void setSaldo(double saldo) {  this.saldo = saldo; 
+ } 
+  public void depositar(double valor){  if (valor > 0){ 
+ setSaldo(getSaldo() + valor);  historico.add("Depositou R$ "+valor);  } 
+ } 
+ public boolean sacar(double valor) {  if (getSaldo() >= valor && valor > 0){  setSaldo(getSaldo() - valor);  historico.add("Sacou R$ "+valor);  return true; 
+ } 
+ return false; 
+ } 
+ public double consultarSaldo() { 
+ return getSaldo(); 
+ } 
+  public void setCliente(Cliente c){  this.cliente = c; 
+ } 
+  public String mostrarHistorico(){  String s = ""; 
+ for(int i=0; i < historico.size(); i++)  s = s + historico.get(i) + "\n";  return s; 
+ }  
+} 
+//Classe Cliente 
+public class Cliente { 
+ private String nome; 
+ private long cpf; 
+  public Cliente (String nome, long cpf){  this.cpf=cpf; 
+ this.nome=nome; 
+ } 
+ public String getNome() { 
+ return nome; 
+ } 
+ public void setNome(String nome) {
+ this.nome = nome; 
+ } 
+ public long getCpf() { 
+ return cpf; 
+ } 
+ public void setCpf(long cpf) { 
+ this.cpf = cpf; 
+ } 
+  public String imprimir(){ 
+ return "Nome: " + nome + " CPF: " + cpf ; 
+ } 
+} 
+_________________________________________________________________________ //Classe ControleCliente 
+import java.util.ArrayList; 
+public class ControleCliente { 
+ private ArrayList <Cliente> clientes = new ArrayList();   public void cadastrarCliente (String nome, long cpf){  clientes.add(new Cliente(nome, cpf)); 
+ } 
+  public Cliente pesquisarCliente(long cpf){ 
+ Cliente c=null; 
+ for (Cliente cli : clientes){ 
+ if (cli.getCpf()== cpf){ 
+ c=cli; 
+ break; 
+ } 
+ } 
+ return c; 
+ } 
+} 
+//Classe ControleConta 
+import java.util.ArrayList; 
+public class ControleConta { 
+ ArrayList <Conta> contas = new ArrayList(); 
+  public void cadastrarConta(Cliente c){ 
+ contas.add(new Conta(c)); 
+ } 
+  public Conta pesquisarConta(int num){ 
+ Conta c = null; 
+ for (int i=0; i<contas.size(); i++){ 
+ if (num == contas.get(i).getNumeroConta()){  c=contas.get(i); 
+ break; 
+ } 
+ } 
+ return c; 
+ } 
+  public String mostrarHistorico(int num){ 
+ Conta c = pesquisarConta(num); 
+ return c.mostrarHistorico(); 
+ }
+  public String imprimirContas (){ 
+ String resultado=""; 
+ for (int i=0; i<contas.size(); i++){ 
+ resultado += contas.get(i).toString() + "\n--------\n";  } 
+ return resultado; 
+ } 
+  public void depoistar (int num, double valor){ 
+ Conta c = pesquisarConta(num); 
+ c.depositar(valor); 
+ } 
+  public boolean sacar (int num, double valor){ 
+ Conta c = pesquisarConta(num); 
+ return c.sacar(valor); 
+ } 
+  public double consultarSaldo (int num){ 
+ Conta c = pesquisarConta(num); 
+ return c.consultarSaldo(); 
+ } 
+} 
+//Classe BancoApp 
+import javax.swing.JOptionPane; 
+public class BancoApp {  
+ public static String menu(){ 
+ return "Banco AP2\n\n" + 
+ "1-Criar Conta\n" + 
+ "2-Depositar Valor\n" + 
+ "3-Sacar Valor\n" + 
+ "4-Consultar Saldo\n" + 
+ "5-Mostrar Histórico\n" + 
+ "6-Imprimir Contas\n"+ 
+ "7-Cadastrar Cliente\n"+ 
+ "0-Finalizar\n\n" + 
+ "Digite a opção desejada:"; 
+ } 
+  public static void main(String[] args) { 
+ int op; 
+ ControleConta cConta = new ControleConta(); 
+ ControleCliente cCliente = new ControleCliente(); 
+ op = Integer.parseInt(JOptionPane.showInputDialog(menu()));   while (op!=0){ 
+ switch (op){ 
+ case 1:{//criar conta 
+ long cpf = Long.parseLong(JOptionPane.showInputDialog("Digite o CPF do cliente:")); 
+ Cliente c = cCliente.pesquisarCliente(cpf);  if (c!=null){ 
+ cConta.cadastrarConta(c); 
+ JOptionPane.showMessageDialog(null, "Conta cadastrada com  sucesso!" ); 
+ } 
+ else{ 
+ JOptionPane.showMessageDialog(null, "CPF inválido" );  }
+ break; 
+ } 
+ case 2:{//depositar 
+ int numConta =  
+Integer.parseInt(JOptionPane.showInputDialog("Digite o numero da conta:"));  double valor =  
+Double.parseDouble(JOptionPane.showInputDialog("Digite o valor do deposito:"));  cConta.depoistar(numConta, valor); 
+ JOptionPane.showMessageDialog(null, "Deposito realizado com  sucesso" ); 
+ break; 
+ } 
+ case 3: { //sacar 
+ int numConta =  
+Integer.parseInt(JOptionPane.showInputDialog("Digite o numero da conta:"));  double valor =  
+Double.parseDouble(JOptionPane.showInputDialog("Digite o valor do saque:"));  if (cConta.sacar(numConta, valor)){ 
+ JOptionPane.showMessageDialog(null, "Saque realizado con  sucesso" ); 
+ } 
+ else 
+ JOptionPane.showMessageDialog(null, "Valor inválido" );  break; 
+ } 
+ case 4: {//consultar saldo 
+ int numConta =  
+Integer.parseInt(JOptionPane.showInputDialog("Digite o numero da conta:"));  JOptionPane.showMessageDialog(null, "Conta: "+ numConta+"\ nSaldo: "+cConta.consultarSaldo(numConta)); 
+ break; 
+ } 
+ case 5: {// mostrar histórico 
+ int numConta =  
+Integer.parseInt(JOptionPane.showInputDialog("Digite o numero da conta:"));  JOptionPane.showMessageDialog(null,  
+cConta.mostrarHistorico(numConta)); 
+ break; 
+ } 
+ case 6: { //imprimir contas 
+ JOptionPane.showMessageDialog(null, cConta.imprimirContas() );  break; 
+ } 
+ case 7: {//Cadastrar Cleinte 
+ String nome = JOptionPane.showInputDialog("Digite o nome do  cliente:"); 
+ long cpf = Long.parseLong(JOptionPane.showInputDialog("Digite o CPF:")); 
+ cCliente.cadastrarCliente(nome, cpf); 
+ JOptionPane.showMessageDialog(null, "Cliente cadastrado com  sucesso!"); 
+ } 
+ } 
+ op = Integer.parseInt(JOptionPane.showInputDialog(menu()));  } 
+ } 
+ }
