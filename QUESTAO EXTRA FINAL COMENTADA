@@ -1,11 +1,11 @@
-package vision;
+package visao;
 
 public class TesteCadastro {
     public static void main(String[] args) {
-        control.CadastroPessoas cp = new control.CadastroPessoas();
-        model.Cliente a = new model.Cliente("Amanda Lima", new model.Data(31, 7, 1987), 1320);
-        model.Funcionario b = new model.Funcionario("Leticia Freire", new model.Data(10, 8, 2005), 2000);
-        model.Gerente c = new model.Gerente("Kauan Soares", new model.Data(14, 4, 2005), 12000, "Financeiro");
+        controle.CadastroPessoas cp = new controle.CadastroPessoas();
+        modelo.Cliente a = new modelo.Cliente("Amanda Lima", new modelo.Data(31, 7, 1987), 1320);
+        modelo.Funcionario b = new modelo.Funcionario("Leticia Freire", new modelo.Data(10, 8, 2005), 2000);
+        modelo.Gerente c = new modelo.Gerente("Kauan Soares", new modelo.Data(14, 4, 2005), 12000, "Financeiro");
 
         cp.cadastraPessoa(a);
         cp.cadastraPessoa(b);
@@ -16,18 +16,18 @@ public class TesteCadastro {
 }
 
 
-package control;
+package controle;
 
 public class CadastroPessoas {
     private int qtdAtual;
-    private model.Pessoa[] pessoas;
+    private modelo.Pessoa[] pessoas;
 
     public CadastroPessoas() {
         this.qtdAtual = 0;
-        this.pessoas = new model.Pessoa[1024];
+        this.pessoas = new modelo.Pessoa[1024];
     }
 
-    public void cadastraPessoa(model.Pessoa pess) {
+    public void cadastraPessoa(modelo.Pessoa pess) {
         this.pessoas[qtdAtual++] = pess;
     }
 
@@ -43,7 +43,7 @@ public class CadastroPessoas {
 
 
 
-package model;
+package modelo;
 
 public abstract class Pessoa {
     private String nome;
@@ -106,7 +106,7 @@ public abstract class Pessoa {
 
 
 
-package model;
+package modelo;
 
 public class Cliente extends Pessoa {
     private int codigo;
@@ -158,7 +158,7 @@ public class Cliente extends Pessoa {
 }
 
 
-package model;
+package modelo;
 
 public class Funcionario extends Pessoa {
     private float salario;
@@ -189,7 +189,7 @@ public class Funcionario extends Pessoa {
 
 
 
-package model;
+package modelo;
 
 public class Gerente extends Funcionario {
     private String area;
@@ -252,7 +252,7 @@ public class Gerente extends Funcionario {
 
 
 
-package model;
+package modelo;
 
 public class Data {
   private int dia;
