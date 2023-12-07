@@ -9,9 +9,9 @@ public class TesteCadastro {
 
         cp.cadastraPessoa(a);
         cp.cadastraPessoa(b);
-        cp.cadastraPessoa(c);
+        cp.cadastraPessoa(c);//cadastra as pessoas pelo metodo da classe CadastroPessoas
 
-        cp.imprimeCadastro();
+        cp.imprimeCadastro();//imprime as informações das pessoas cadastradas,usando o metodo criado na classe CadastroPessoas
     }
 }
 
@@ -20,7 +20,7 @@ package controle;
 
 public class CadastroPessoas {
     private int qtdAtual;
-    private modelo.Pessoa[] pessoas;
+    private modelo.Pessoa[] pessoas;// variavel criada para armazenar as informações das pessoas cadastradas 
 
     public CadastroPessoas() {
         this.qtdAtual = 0;
@@ -28,13 +28,13 @@ public class CadastroPessoas {
     }
 
     public void cadastraPessoa(modelo.Pessoa pess) {
-        this.pessoas[qtdAtual++] = pess;
+        this.pessoas[qtdAtual++] = pess;//array responsavel por armazenar as informações das pessoas cadastradas
     }
 
     public void imprimeCadastro() {
         System.out.println("Cadastro:");
         for (int i = 0; i < qtdAtual; i++) {
-            pessoas[i].imprimeDados();
+            pessoas[i].imprimeDados();//função para imprimir os dados usando o metodo da classe Pessoa
         }
     }
 }
@@ -51,7 +51,7 @@ public abstract class Pessoa {
 
     public Pessoa(String nome, Data nascimento) {
         this.nome = nome;
-        this.nascimento = nascimento;
+        this.nascimento = nascimento;   //construtor
     }
 
     public String getNome() {
@@ -70,18 +70,27 @@ public abstract class Pessoa {
         this.nascimento = nascimento;
     }
 
-    public abstract void imprimeDados();
+   
+
+
+ public String imprimeDados() {
+        return String.format("Nome: %s\nData de nascimento: %s", nome, nascimento);
+    }//Método  para imprimir dados
+
+public String imprimeDados() {
+    return String.format("Nome: %s\nData de nascimento: %s", nome, nascimento);
+}
 
     
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
-            return true;
+            return true;// verifica se os objetos sendo comparados são a mesma instância. Se isso for verdadeiro, os objetos são iguais e o método retorna true.
         if (obj == null)
-            return false;
+            return false;// o código verifica se o objeto sendo comparado  é nulo. Se for , os objetos não são iguais e o método retorna false.
         if (getClass() != obj.getClass())
-            return false;
+            return false;// verifica se os objetos são da mesma classe. Se não forem, os objetos não são considerados iguais e o método retorna false.
         Pessoa other = (Pessoa) obj;
         if (nome == null) {
             if (other.nome != null)
@@ -92,7 +101,8 @@ public abstract class Pessoa {
             if (other.nascimento != null)
                 return false;
         } else if (!nascimento.equals(other.nascimento))
-            return false;
+            return false;/* compara os campos nome e nascimento. Se o nome/nascimento no objeto atual for nulo, ele verifica se o nome/nascimento no outro objeto é nulo. 
+                         Se ambos não forem  nulos, ele verifica se os nomes/nascientos são iguais.*/
         return true;
     }
 }
@@ -117,15 +127,18 @@ public class Cliente extends Pessoa {
         this.codigo = codigo;
     }
 
-    @Override
-    public void imprimeDados() {
-        System.out.format("Cliente:" + 
-                           "\nNome: %s" +
-                           "\nData de nascimento: %s" +
-                           "\nCódigo: %d" + 
-                           "\n---------------------------------------------\n",
-                           super.getNome(), super.getNascimento(), this.codigo);
-    }
+
+
+
+@Override
+public String imprimeDados() {
+    return String.format("Cliente:" +
+                         "\nNome: %s" +
+                         "\nData de nascimento: %s" +
+                         "\nCódigo: %d" +
+                         "\n---------------------------------------------\n",
+                         super.getNome(), super.getNascimento(), this.codigo);
+}//Método para imprimir dados criado pela classe Pessoa porém modificado(por isso o Override)
 
     
 
@@ -141,7 +154,7 @@ public class Cliente extends Pessoa {
         if (codigo != other.codigo)
             return false;
         return true;
-    }
+    }//método de verificação equals criado pela classe Pessoa porém modificado(por isso o Override)
 }
 
 
@@ -164,14 +177,18 @@ public class Funcionario extends Pessoa {
     }
     
     
-     @Override
-    public void imprimeDados() {
-        System.out.println("Funcionário:");
-        System.out.println("Nome: " + getNome());
-        System.out.println("Data de nascimento: " + getNascimento());
-        System.out.println("Salário: " + salario);
-    }
+
+@Override
+public String imprimeDados() {
+    return String.format("Funcionário:" +
+                         "\nNome: %s" +
+                         "\nData de nascimento: %s" +
+                         "\nSalário: %.02f" +
+                         "\n---------------------------------------------\n",
+                         getNome(), getNascimento(), salario);
 }
+
+     
 
 
 
@@ -200,16 +217,17 @@ public class Gerente extends Funcionario {
     }
 
     @Override
-    public void imprimeDados() {
-        System.out.format("Gerente:" + 
-                           "\nNome: %s" +
-                           "\nData de nascimento: %s" +
-                           "\nSalário: %.02f" + 
-                           "\nImposto sobre salário: %.02f" +
-                           "\nÁrea: %s" +
-                           "\n---------------------------------------------\n",
-                           super.getNome(), super.getNascimento(), super.getSalario(), this.calcularImposto(), this.area);
-    }
+ public String imprimeDados() {
+    return String.format("Gerente:" + 
+                       "\nNome: %s" +
+                       "\nData de nascimento: %s" +
+                       "\nSalário: %.02f" + 
+                       "\nImposto sobre salário: %.02f" +
+                       "\nÁrea: %s" +
+                       "\n---------------------------------------------\n",
+                       super.getNome(), super.getNascimento(), super.getSalario(), this.calcularImposto(), this.area);
+}
+
 
     
 
@@ -273,7 +291,7 @@ public class Data {
   @Override
   public String toString() {
     return String.format("%02d/%02d/%04d", dia, mes, ano);
-  }
+  }//formata para obter o formato do dia,mes e ano
 
   
 
