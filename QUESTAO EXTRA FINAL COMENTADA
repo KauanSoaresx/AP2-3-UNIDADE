@@ -72,14 +72,7 @@ public abstract class Pessoa {
 
     public abstract void imprimeDados();
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-        result = prime * result + ((nascimento == null) ? 0 : nascimento.hashCode());
-        return result;
-    }
+    
 
     @Override
     public boolean equals(Object obj) {
@@ -134,13 +127,7 @@ public class Cliente extends Pessoa {
                            super.getNome(), super.getNascimento(), this.codigo);
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + codigo;
-        return result;
-    }
+    
 
     @Override
     public boolean equals(Object obj) {
@@ -224,13 +211,7 @@ public class Gerente extends Funcionario {
                            super.getNome(), super.getNascimento(), super.getSalario(), this.calcularImposto(), this.area);
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + ((area == null) ? 0 : area.hashCode());
-        return result;
-    }
+    
 
     @Override
     public boolean equals(Object obj) {
@@ -294,15 +275,7 @@ public class Data {
     return String.format("%02d/%02d/%04d", dia, mes, ano);
   }
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + dia;
-    result = prime * result + mes;
-    result = prime * result + ano;
-    return result;
-  }
+  
 
   @Override
   public boolean equals(Object obj) {
